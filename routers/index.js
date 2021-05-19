@@ -358,6 +358,14 @@ router.get('/manage/plex/list', (req, res) => {
 })
 
 
+//获取plex关联的 Lpar
+
+
+//获取所有Lpar列表
+
+
+
+
 /*
 得到指定数组的分页信息对象
  */
