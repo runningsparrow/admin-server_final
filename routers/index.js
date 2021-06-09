@@ -11,6 +11,8 @@ const RoleModel = require('../models/RoleModel')
 
 //20210214
 const PlexModel = require('../models/PlexModel')
+//20210609
+const LparModel = require('../models/LparModel')
 
 
 // 得到路由器对象
@@ -363,6 +365,36 @@ router.get('/manage/plex/list', (req, res) => {
 
 //获取所有Lpar列表
 
+
+
+//添加一个Lpar
+router.post('/manage/lpar/add', (req, res) => {
+  // 读取请求参数数据
+  const {lparname} = req.body
+  // 处理: 判断用户是否已经存在, 如果存在, 返回提示错误的信息, 如果不存在, 保存
+  // 查询(根据username)
+  LparModel.findOne({lparname})
+    .then(lpar => {
+      // 如果user有值(已存在)
+      if (lpar) {
+        // 返回提示错误的信息
+        res.send({status: 1, msg: '此lpar已存在'})
+        return new Promise(() => {
+        })
+      } else { // 没值(不存在)
+        // 保存
+        return LparModel.create({...req.body})
+      }
+    })
+    .then(lpar => {
+      // 返回包含user的json数据
+      res.send({status: 0, data: lpar})
+    })
+    .catch(error => {
+      console.error('添加lpar异常', error)
+      res.send({status: 1, msg: '添加lpar异常, 请重新尝试'})
+    })
+})
 
 
 
