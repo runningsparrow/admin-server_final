@@ -364,16 +364,25 @@ router.get('/manage/plex/list', (req, res) => {
 
 
 //获取所有Lpar列表
-
+router.get('/manage/lpar/list', (req, res) => {
+  LparModel.find()
+    .then(lpars => {
+      res.send({status: 0, data: lpars})
+    })
+    .catch(error => {
+      console.error('获取lpar列表异常', error)
+      res.send({status: 1, msg: '获取lpar列表异常, 请重新尝试'})
+    })
+})
 
 
 //添加一个Lpar
 router.post('/manage/lpar/add', (req, res) => {
   // 读取请求参数数据
-  const {lparname} = req.body
+  const {lpar_name} = req.body
   // 处理: 判断用户是否已经存在, 如果存在, 返回提示错误的信息, 如果不存在, 保存
   // 查询(根据username)
-  LparModel.findOne({lparname})
+  LparModel.findOne({lpar_name})
     .then(lpar => {
       // 如果user有值(已存在)
       if (lpar) {
@@ -393,6 +402,49 @@ router.post('/manage/lpar/add', (req, res) => {
     .catch(error => {
       console.error('添加lpar异常', error)
       res.send({status: 1, msg: '添加lpar异常, 请重新尝试'})
+    })
+})
+
+
+// 更新lpar
+router.post('/manage/lpar/update', (req, res) => {
+  const lpar = req.body
+  // console.log(lpar.lpar_id)
+  // 此种写法也可以
+  // LparModel.findOneAndUpdate({lpar_id: lpar.lpar_id}, Object.assign({}, lpar)) 
+  LparModel.findOneAndUpdate({lpar_id: lpar.lpar_id}, lpar)
+    .then(oldLpar => {
+      console.log("oldLpar: " + oldLpar)
+      const data = Object.assign(oldLpar, lpar)
+      // 返回
+      res.send({status: 0, data})
+    })
+    .catch(error => {
+      console.error('更新lpar异常', error)
+      res.send({status: 1, msg: '更新lpar异常, 请重新尝试'})
+    })
+})
+
+
+
+// 删除lpar
+router.post('/manage/lpar/delete', (req, res) => {
+  const {lpar_name} = req.body
+  LparModel.deleteOne({lpar_name: lpar_name})
+    .then((doc) => {
+      if(doc.n >= 1)
+      {
+        res.send({status: 0,msg: '删除成功',result: doc, lparname:lpar_name})
+      }
+      if(doc.n == 0)
+      {
+        res.send({status: 0,msg: '未找到需要删除的数据',result: doc, lparname:lpar_name})
+      }
+      
+    })
+    .catch(error => {
+      console.error('删除lpar异常', error)
+      res.send({status: 1, msg: '删除lpar异常, 请重新尝试'})
     })
 })
 
