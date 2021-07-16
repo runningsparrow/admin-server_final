@@ -347,6 +347,27 @@ router.post('/manage/plex/add', (req, res) => {
 })
 
 
+// 更新plex
+router.post('/manage/plex/update', (req, res) => {
+  const plex = req.body
+  // console.log(lpar.lpar_id)
+  // 此种写法也可以
+  // LparModel.findOneAndUpdate({lpar_id: lpar.lpar_id}, Object.assign({}, lpar)) 
+  PlexModel.findOneAndUpdate({plexname: plex.plexname}, plex)
+    .then(oldPlex => {
+      console.log("oldPlex: " + oldPlex)
+      const data = Object.assign(oldPlex, plex)
+      // 返回
+      res.send({status: 0, data})
+    })
+    .catch(error => {
+      console.error('更新plex异常', error)
+      res.send({status: 1, msg: '更新plex异常, 请重新尝试'})
+    })
+})
+
+
+
 // 获取所有plex列表
 router.get('/manage/plex/list', (req, res) => {
   PlexModel.find()
