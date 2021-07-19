@@ -13,6 +13,8 @@ const RoleModel = require('../models/RoleModel')
 const PlexModel = require('../models/PlexModel')
 //20210609
 const LparModel = require('../models/LparModel')
+//20210719
+const EnvModel = require('../models/EnvModel')
 
 
 // 得到路由器对象
@@ -466,6 +468,50 @@ router.post('/manage/lpar/delete', (req, res) => {
     .catch(error => {
       console.error('删除lpar异常', error)
       res.send({status: 1, msg: '删除lpar异常, 请重新尝试'})
+    })
+})
+
+
+//Env
+//添加一个Env
+router.post('/manage/env/add', (req, res) => {
+  // 读取请求参数数据
+  const {envname} = req.body
+  // 处理: 判断用户是否已经存在, 如果存在, 返回提示错误的信息, 如果不存在, 保存
+  // 查询(根据username)
+  EnvModel.findOne({envname})
+    .then(env => {
+      // 如果user有值(已存在)
+      if (env) {
+        // 返回提示错误的信息
+        res.send({status: 1, msg: '此env已存在'})
+        return new Promise(() => {
+        })
+      } else { // 没值(不存在)
+        // 保存
+        return EnvModel.create({...req.body})
+      }
+    })
+    .then(env => {
+      // 返回包含user的json数据
+      res.send({status: 0, data: env})
+    })
+    .catch(error => {
+      console.error('添加env异常', error)
+      res.send({status: 1, msg: '添加env异常, 请重新尝试'})
+    })
+})
+
+
+// 获取所有env列表
+router.get('/manage/env/list', (req, res) => {
+  EnvModel.find()
+    .then(envs => {
+      res.send({status: 0, data: envs})
+    })
+    .catch(error => {
+      console.error('获取env列表异常', error)
+      res.send({status: 1, msg: '获取plex列表异常, 请重新尝试'})
     })
 })
 
