@@ -369,6 +369,27 @@ router.post('/manage/plex/update', (req, res) => {
 })
 
 
+// 删除plex
+router.post('/manage/plex/delete', (req, res) => {
+  const {plexname} = req.body
+  PlexModel.deleteOne({plexname: plexname})
+    .then((doc) => {
+      if(doc.n >= 1)
+      {
+        res.send({status: 0,msg: '删除成功',result: doc, plexname:plexname})
+      }
+      if(doc.n == 0)
+      {
+        res.send({status: 0,msg: '未找到需要删除的数据',result: doc, plexname:plexname})
+      }
+      
+    })
+    .catch(error => {
+      console.error('删除lpar异常', error)
+      res.send({status: 1, msg: '删除plex异常, 请重新尝试'})
+    })
+})
+
 
 // 获取所有plex列表
 router.get('/manage/plex/list', (req, res) => {
@@ -514,6 +535,8 @@ router.get('/manage/env/list', (req, res) => {
       res.send({status: 1, msg: '获取plex列表异常, 请重新尝试'})
     })
 })
+
+
 
 
 
