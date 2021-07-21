@@ -4,6 +4,8 @@
 const express = require('express')
 const md5 = require('blueimp-md5')
 
+
+
 const UserModel = require('../models/UserModel')
 const CategoryModel = require('../models/CategoryModel')
 const ProductModel = require('../models/ProductModel')
@@ -405,6 +407,20 @@ router.get('/manage/plex/list', (req, res) => {
 
 
 //获取plex关联的 Lpar
+router.post('/manage/plex/lpar', (req, res) => {
+  const {plexname} = req.body
+  console.log(req.body)
+  LparModel.find({lpar_sysplex: plexname})
+    .then(lpars => {
+      res.send({status: 0, data: lpars})
+    })
+    .catch(error => {
+      console.error('获取lpar列表异常', error)
+      res.send({status: 1, msg: '获取lpar列表异常, 请重新尝试'})
+    })
+})
+
+
 
 
 //获取所有Lpar列表

@@ -9,6 +9,21 @@ const mongoose = require('mongoose')
 const express = require('express')
 const app = express() // 产生应用对象
 
+//20210721 日志 =========
+var morgan = require('morgan');
+// var fs = require('fs');  
+const fs = require('fs')
+
+var accessLog = fs.createWriteStream('./access.log', {flags : 'a'});  
+var errorLog = fs.createWriteStream('./error.log', {flags : 'a'});  
+  
+// app.use(morgan('dev'));     //打印到控制台  
+app.use(morgan('combined', {stream : accessLog}));      //打印到log日志  
+
+//===========================
+
+
+
 // 声明使用静态中间件
 app.use(express.static('public'))
 // 声明使用解析post请求的中间件
@@ -21,7 +36,7 @@ app.use(cookieParser())
 const indexRouter = require('./routers')
 app.use('/', indexRouter)  //
 
-const fs = require('fs')
+// const fs = require('fs')
 
 // 必须在路由器中间之后声明使用
 /*app.use((req, res) => {
