@@ -22,6 +22,10 @@ app.use(morgan('combined', {stream : accessLog}));      //打印到log日志
 
 //===========================
 
+//20210724
+//项目入口  app.js  调用刚才写好的方法
+var  {jwtAuth} = require("./utils/jwt");
+
 
 
 // 声明使用静态中间件
@@ -32,6 +36,10 @@ app.use(express.json()) // 请求体参数是json结构: {name: tom, pwd: 123}
 // 声明使用解析cookie数据的中间件
 const cookieParser = require('cookie-parser')
 app.use(cookieParser())
+
+//路由拦截判断 token是否上送
+app.use(jwtAuth);
+
 // 声明使用路由器中间件
 const indexRouter = require('./routers')
 app.use('/', indexRouter)  //

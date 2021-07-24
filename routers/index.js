@@ -19,12 +19,18 @@ const LparModel = require('../models/LparModel')
 const EnvModel = require('../models/EnvModel')
 
 
+//20210724 在路由里面调用刚才写好的方法生成Token   router.js
+const {createToken} = require("../utils/jwt.js");
+
+
 // 得到路由器对象
 const router = express.Router()
 // console.log('router', router)
 
 // 指定需要过滤的属性
 const filter = {password: 0, __v: 0}
+
+
 
 
 // 登陆
@@ -36,17 +42,21 @@ router.post('/login', (req, res) => {
       if (user) { // 登陆成功
         // 生成一个cookie(userid: user._id), 并交给浏览器保存
         res.cookie('userid', user._id, {maxAge: 1000 * 60 * 60 * 24})
+
+        //20210724 生成token
+        const  Token =   createToken({username, password});
+
         if (user.role_id) {
           RoleModel.findOne({_id: user.role_id})
             .then(role => {
               user._doc.role = role
               console.log('role user', user)
-              res.send({status: 0, data: user})
+              res.send({status: 0, data: user, Token:Token })
             })
         } else {
           user._doc.role = {menus: []}
           // 返回登陆成功信息(包含user)
-          res.send({status: 0, data: user})
+          res.send({status: 0, data: user, Token:Token})
         }
 
       } else {// 登陆失败
