@@ -23,6 +23,8 @@ const EnvModel = require('../models/EnvModel')
 const {createToken} = require("../utils/jwt.js");
 
 
+
+
 // 得到路由器对象
 const router = express.Router()
 // console.log('router', router)
@@ -85,7 +87,7 @@ router.post('/manage/user/add', (req, res) => {
         })
       } else { // 没值(不存在)
         // 保存
-        return UserModel.create({...req.body, password: md5(password || 'atguigu')})
+        return UserModel.create({...req.body, password: md5(password || '111111')})
       }
     })
     .then(user => {
@@ -563,7 +565,16 @@ router.get('/manage/env/list', (req, res) => {
 })
 
 
+//验证token
+router.post('/testjwt', (req, res) => {
 
+  
+
+  res.send({status: 0, data: {"result":"token有效"}, pass: true})
+
+  
+
+})
 
 
 /*

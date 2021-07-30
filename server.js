@@ -40,6 +40,18 @@ app.use(cookieParser())
 //路由拦截判断 token是否上送
 app.use(jwtAuth);
 
+
+//handle UnauthorizedError
+app.use(function (err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {	
+	  //  这个需要根据自己的业务逻辑来处理 具体的err值 请看下面
+
+    resdata = {status: 1, data: err.inner}
+    res.status(401).send(resdata);
+  }
+});
+
+
 // 声明使用路由器中间件
 const indexRouter = require('./routers')
 app.use('/', indexRouter)  //

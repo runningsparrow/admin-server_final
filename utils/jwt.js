@@ -28,7 +28,10 @@ const jwtAuth = expressJwt({
   credentialsRequired: true//  false：不校验
 }).unless({
   path: ["/login", "/register"] //不需要校验的路径
-});
+})
+
+
+
 
 module.exports = { jwtAuth, createToken };
 
