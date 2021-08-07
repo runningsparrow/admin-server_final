@@ -9,6 +9,48 @@ const mongoose = require('mongoose')
 const express = require('express')
 const app = express() // 产生应用对象
 
+//20210807 引入 swagger
+const expressSwagger = require('express-swagger-generator')(app);
+//////////////////////////////////////////////////////////////////////
+
+let options = {
+  swaggerDefinition: {
+      info: {
+          description: 'This is a storage management rest api',
+          title: 'Swagger',
+          version: '1.0.0',
+      },
+      host: 'localhost:5000',   //访问 http://localhost:5000/api-docs  //并且此url跳过了jwt的安全验证??
+      basePath: '',               //可以改变路径
+      consumes: [
+        "application/x-www-form-urlencoded",
+        // "application/json",
+        // "multipart/form-data"
+      ],
+      produces: [
+          "application/json",
+          // "application/xml"
+          // "application/x-www-form-urlencoded"
+      ],
+      schemes: ['http', 'https'],
+      securityDefinitions: {
+          JWT: {
+              type: 'apiKey',
+              in: 'header',
+              name: 'Authorization',
+              description: "",
+          }
+      },
+      security: [{Bearer: []}],
+      defaultSecurity: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiJhZG1pbiIsImlhdCI6MTYyODMyMTQ4OCwiZXhwIjoxNjI5MTg1NDg4fQ.m1hSYHsT3OvfHrLwrt_obYk7b_bLSf18_aEpj6OF2Yk'
+  },
+  basedir: __dirname, //app absolute path
+  files: ['./routers/**/*.js'] //Path to the API handle folder //路径千万别写错
+};
+expressSwagger(options)
+
+//////////////////////////////////////////////////////////////////////
+
 //20210721 日志 =========
 var morgan = require('morgan');
 // var fs = require('fs');  
@@ -38,7 +80,7 @@ const cookieParser = require('cookie-parser')
 app.use(cookieParser())
 
 //路由拦截判断 token是否上送
-app.use(jwtAuth);
+// app.use(jwtAuth);
 
 
 //handle UnauthorizedError

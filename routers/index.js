@@ -17,12 +17,15 @@ const PlexModel = require('../models/PlexModel')
 const LparModel = require('../models/LparModel')
 //20210719
 const EnvModel = require('../models/EnvModel')
+//20210806
+const Devicemodel = require('../models/DeviceModel')
 
 
 //20210724 在路由里面调用刚才写好的方法生成Token   router.js
 const {createToken} = require("../utils/jwt.js");
 
-
+const user = require('./user')
+const plexobj = require('./plex')
 
 
 // 得到路由器对象
@@ -36,40 +39,86 @@ const filter = {password: 0, __v: 0}
 
 
 // 登陆
-router.post('/login', (req, res) => {
-  const {username, password} = req.body
-  // 根据username和password查询数据库users, 如果没有, 返回提示错误的信息, 如果有, 返回登陆成功信息(包含user)
-  UserModel.findOne({username, password: md5(password)})
-    .then(user => {
-      if (user) { // 登陆成功
-        // 生成一个cookie(userid: user._id), 并交给浏览器保存
-        res.cookie('userid', user._id, {maxAge: 1000 * 60 * 60 * 24})
+// router.post('/login', (req, res) => {
+//   const {username, password} = req.body
+//   // 根据username和password查询数据库users, 如果没有, 返回提示错误的信息, 如果有, 返回登陆成功信息(包含user)
+//   UserModel.findOne({username, password: md5(password)})
+//     .then(user => {
+//       if (user) { // 登陆成功
+//         // 生成一个cookie(userid: user._id), 并交给浏览器保存
+//         res.cookie('userid', user._id, {maxAge: 1000 * 60 * 60 * 24})
 
-        //20210724 生成token
-        const  Token =   createToken({username, password});
+//         //20210724 生成token
+//         const  Token =   createToken({username, password});
 
-        if (user.role_id) {
-          RoleModel.findOne({_id: user.role_id})
-            .then(role => {
-              user._doc.role = role
-              console.log('role user', user)
-              res.send({status: 0, data: user, Token:Token })
-            })
-        } else {
-          user._doc.role = {menus: []}
-          // 返回登陆成功信息(包含user)
-          res.send({status: 0, data: user, Token:Token})
-        }
+//         if (user.role_id) {
+//           RoleModel.findOne({_id: user.role_id})
+//             .then(role => {
+//               user._doc.role = role
+//               console.log('role user', user)
+//               res.send({status: 0, data: user, Token:Token })
+//             })
+//         } else {
+//           user._doc.role = {menus: []}
+//           // 返回登陆成功信息(包含user)
+//           res.send({status: 0, data: user, Token:Token})
+//         }
 
-      } else {// 登陆失败
-        res.send({status: 1, msg: '用户名或密码不正确!'})
-      }
-    })
-    .catch(error => {
-      console.error('登陆异常', error)
-      res.send({status: 1, msg: '登陆异常, 请重新尝试'})
-    })
+//       } else {// 登陆失败
+//         res.send({status: 1, msg: '用户名或密码不正确!'})
+//       }
+//     })
+//     .catch(error => {
+//       console.error('登陆异常', error)
+//       res.send({status: 1, msg: '登陆异常, 请重新尝试'})
+//     })
+// })
+
+router.post('/login', (req, res) =>{
+  user.loginpost(req, res) 
 })
+
+// /**
+//  * 用户登录
+//  * @route POST /login
+//  * @group user - Operations about user
+//  * @param {string} username.query.required - 请输入用户名
+//  * @param {string} password.query.required - 请输入密码
+//  */
+// loginpost = function(req, res)  {
+//   const {username, password} = req.body
+//   // 根据username和password查询数据库users, 如果没有, 返回提示错误的信息, 如果有, 返回登陆成功信息(包含user)
+//   UserModel.findOne({username, password: md5(password)})
+//     .then(user => {
+//       if (user) { // 登陆成功
+//         // 生成一个cookie(userid: user._id), 并交给浏览器保存
+//         res.cookie('userid', user._id, {maxAge: 1000 * 60 * 60 * 24})
+
+//         //20210724 生成token
+//         const  Token =   createToken({username, password});
+
+//         if (user.role_id) {
+//           RoleModel.findOne({_id: user.role_id})
+//             .then(role => {
+//               user._doc.role = role
+//               console.log('role user', user)
+//               res.send({status: 0, data: user, Token:Token })
+//             })
+//         } else {
+//           user._doc.role = {menus: []}
+//           // 返回登陆成功信息(包含user)
+//           res.send({status: 0, data: user, Token:Token})
+//         }
+
+//       } else {// 登陆失败
+//         res.send({status: 1, msg: '用户名或密码不正确!'})
+//       }
+//     })
+//     .catch(error => {
+//       console.error('登陆异常', error)
+//       res.send({status: 1, msg: '登陆异常, 请重新尝试'})
+//     })
+// }
 
 // 添加用户
 router.post('/manage/user/add', (req, res) => {
@@ -332,35 +381,43 @@ router.post('/manage/role/update', (req, res) => {
 
 
 
-//20210214
-// 添加plex
-router.post('/manage/plex/add', (req, res) => {
-  // 读取请求参数数据
-  const {plexname} = req.body
-  // 处理: 判断用户是否已经存在, 如果存在, 返回提示错误的信息, 如果不存在, 保存
-  // 查询(根据username)
-  PlexModel.findOne({plexname})
-    .then(plex => {
-      // 如果user有值(已存在)
-      if (plex) {
-        // 返回提示错误的信息
-        res.send({status: 1, msg: '此plex已存在'})
-        return new Promise(() => {
-        })
-      } else { // 没值(不存在)
-        // 保存
-        return PlexModel.create({...req.body})
-      }
-    })
-    .then(plex => {
-      // 返回包含user的json数据
-      res.send({status: 0, data: plex})
-    })
-    .catch(error => {
-      console.error('添加plex异常', error)
-      res.send({status: 1, msg: '添加plex异常, 请重新尝试'})
-    })
+
+
+// //20210214
+// // 添加plex
+
+router.post('/manage/plex/add', (req, res) =>{
+  plexobj.plexadd(req, res) 
 })
+
+
+// router.post('/manage/plex/add', (req, res) => {
+//   // 读取请求参数数据
+//   const {plexname} = req.body
+//   // 处理: 判断用户是否已经存在, 如果存在, 返回提示错误的信息, 如果不存在, 保存
+//   // 查询(根据username)
+//   PlexModel.findOne({plexname})
+//     .then(plex => {
+//       // 如果user有值(已存在)
+//       if (plex) {
+//         // 返回提示错误的信息
+//         res.send({status: 1, msg: '此plex已存在'})
+//         return new Promise(() => {
+//         })
+//       } else { // 没值(不存在)
+//         // 保存
+//         return PlexModel.create({...req.body})
+//       }
+//     })
+//     .then(plex => {
+//       // 返回包含user的json数据
+//       res.send({status: 0, data: plex})
+//     })
+//     .catch(error => {
+//       console.error('添加plex异常', error)
+//       res.send({status: 1, msg: '添加plex异常, 请重新尝试'})
+//     })
+// })
 
 
 // 更新plex
@@ -563,6 +620,39 @@ router.get('/manage/env/list', (req, res) => {
       res.send({status: 1, msg: '获取plex列表异常, 请重新尝试'})
     })
 })
+
+
+//DeviceModel 增删改查
+
+// 添加设备
+router.post('/manage/device/add', (req, res) => {
+  // 读取请求参数数据
+  const {device_number} = req.body
+  // 处理: 判断用户是否已经存在, 如果存在, 返回提示错误的信息, 如果不存在, 保存
+  // 查询(根据username)
+  DeviceMOdel.findOne({device_number})
+    .then(device => {
+      // 如果user有值(已存在)
+      if (device) {
+        // 返回提示错误的信息
+        res.send({status: 1, msg: '此device已存在'})
+        return new Promise(() => {
+        })
+      } else { // 没值(不存在)
+        // 保存
+        return DeviceModel.create({...req.body})
+      }
+    })
+    .then(device => {
+      // 返回包含user的json数据
+      res.send({status: 0, data: device})
+    })
+    .catch(error => {
+      console.error('添加device异常', error)
+      res.send({status: 1, msg: '添加device异常, 请重新尝试'})
+    })
+})
+
 
 
 //验证token

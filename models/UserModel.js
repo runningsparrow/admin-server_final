@@ -6,6 +6,7 @@ const mongoose = require('mongoose')
 const md5 = require('blueimp-md5')
 
 // 2.字义Schema(描述文档结构)
+ 
 const userSchema = new mongoose.Schema({
   username: {type: String, required: true}, // 用户名
   password: {type: String, required: true}, // 密码
