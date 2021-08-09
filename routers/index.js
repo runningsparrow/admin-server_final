@@ -17,15 +17,16 @@ const PlexModel = require('../models/PlexModel')
 const LparModel = require('../models/LparModel')
 //20210719
 const EnvModel = require('../models/EnvModel')
-//20210806
-const Devicemodel = require('../models/DeviceModel')
+
 
 
 //20210724 在路由里面调用刚才写好的方法生成Token   router.js
 const {createToken} = require("../utils/jwt.js");
 
+//objs
 const user = require('./user')
 const plexobj = require('./plex')
+const deviceobj = require('./device')
 
 
 // 得到路由器对象
@@ -622,36 +623,20 @@ router.get('/manage/env/list', (req, res) => {
 })
 
 
-//DeviceModel 增删改查
-
-// 添加设备
+//device
 router.post('/manage/device/add', (req, res) => {
-  // 读取请求参数数据
-  const {device_number} = req.body
-  // 处理: 判断用户是否已经存在, 如果存在, 返回提示错误的信息, 如果不存在, 保存
-  // 查询(根据username)
-  DeviceMOdel.findOne({device_number})
-    .then(device => {
-      // 如果user有值(已存在)
-      if (device) {
-        // 返回提示错误的信息
-        res.send({status: 1, msg: '此device已存在'})
-        return new Promise(() => {
-        })
-      } else { // 没值(不存在)
-        // 保存
-        return DeviceModel.create({...req.body})
-      }
-    })
-    .then(device => {
-      // 返回包含user的json数据
-      res.send({status: 0, data: device})
-    })
-    .catch(error => {
-      console.error('添加device异常', error)
-      res.send({status: 1, msg: '添加device异常, 请重新尝试'})
-    })
+  deviceobj.deviceadd(req, res) 
 })
+
+router.post('/manage/device/update', (req, res) => {
+  deviceobj.deviceupdate(req, res) 
+})
+
+router.post('/manage/device/delete', (req, res) => {
+  deviceobj.devicedelete(req, res) 
+})
+
+
 
 
 
