@@ -8,7 +8,12 @@ const mongoose = require('mongoose')
 const deviceSchema = new mongoose.Schema({
   device_number: {type: String, required: true},
   device_volser: {type: String, required: true},
+  device_sysplex: {type: String},
   device_type: {type: String},
+  device_ser: {type: String},
+  device_ssid: {type: Number},
+  device_sms: {type: String},
+  device_sg: {type: String},
   device_full: {type: Number, default: 0},
   device_sysshr1: {type: Number, default: 0},
   device_sysshr2: {type: Number, default: 0}

@@ -7,7 +7,7 @@ const PlexModel = require('../models/PlexModel')
 /**
  * 添加一个 plex
  * @route POST /manage/plex/add
- * @group plexobj - Operations about plex
+ * @group plexobj 主机plex - Operations about plex
  * @consumes application/x-www-form-urlencoded
  * @param {string} use.formData.required
  * @param {string} plexname.formData.required

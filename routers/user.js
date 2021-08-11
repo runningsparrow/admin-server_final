@@ -10,7 +10,7 @@ const {createToken} = require("../utils/jwt.js");
 /**
  * 用户登录
  * @route POST /login
- * @group user - Operations about user
+ * @group user 用户 - Operations about user
  * @consumes application/x-www-form-urlencoded
  * @param {string} username.formData.required
  * @param {string} password.formData.required

@@ -618,7 +618,7 @@ router.get('/manage/env/list', (req, res) => {
     })
     .catch(error => {
       console.error('获取env列表异常', error)
-      res.send({status: 1, msg: '获取plex列表异常, 请重新尝试'})
+      res.send({status: 1, msg: '获取env列表异常, 请重新尝试'})
     })
 })
 
@@ -637,6 +637,13 @@ router.post('/manage/device/delete', (req, res) => {
 })
 
 
+router.post('/manage/device/list', (req, res) => {
+  deviceobj.devicelist(req, res) 
+})
+
+router.post('/manage/device/querybydevice', (req, res) => {
+  deviceobj.devicequerybydevice(req, res) 
+})
 
 
 
