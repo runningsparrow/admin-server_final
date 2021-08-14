@@ -26,7 +26,7 @@ cosnt CtrlUnitModel = require('../models/CtrlUnitModel')
  * @param {number} ctrlunit_mc.formData
  * @param {number} ctrlunit_serial.formData
  * @param {string} ctrlunit_description.formData
- * @returns {object} 200 - An array of device info
+ * @returns {object} 200 - An array of ctrlunit info
  * @returns {Error}  default - Unexpected error
  */
 // router.post('/manage/ctrlunit/add', (req, res) => {
