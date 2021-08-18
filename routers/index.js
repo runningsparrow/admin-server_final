@@ -27,6 +27,8 @@ const {createToken} = require("../utils/jwt.js");
 const user = require('./user')
 const plexobj = require('./plex')
 const deviceobj = require('./device')
+const ctrlunit = require('./ctrlunit')
+const disktype = require('./disktype')
 
 
 // 得到路由器对象
@@ -645,6 +647,51 @@ router.post('/manage/device/querybydevice', (req, res) => {
   deviceobj.devicequerybydevice(req, res) 
 })
 
+
+//ctrlunit
+router.post('/manage/ctrlunit/add', (req, res) => {
+  ctrlunit.ctrlunitadd(req, res) 
+})
+
+router.post('/manage/ctrlunit/update', (req, res) => {
+  ctrlunit.ctrlunitupdate(req, res) 
+})
+
+router.post('/manage/ctrlunit/delete', (req, res) => {
+  ctrlunit.ctrlunitdelete(req, res) 
+})
+
+
+router.post('/manage/ctrlunit/list', (req, res) => {
+  ctrlunit.ctrlunitlist(req, res) 
+})
+
+router.post('/manage/ctrlunit/querybyctrlunit', (req, res) => {
+  ctrlunit.ctrlunitquerybyctrlunit(req, res) 
+})
+
+
+//disktype
+router.post('/manage/disktype/add', (req, res) => {
+  disktype.disktypeadd(req, res) 
+})
+
+router.post('/manage/disktype/update', (req, res) => {
+  disktype.disktypeupdate(req, res) 
+})
+
+router.post('/manage/disktype/delete', (req, res) => {
+  disktype.disktypedelete(req, res) 
+})
+
+
+router.post('/manage/disktype/list', (req, res) => {
+  disktype.disktypelist(req, res) 
+})
+
+router.post('/manage/disktype/querybydisktype', (req, res) => {
+  disktype.disktypequerybydisktype(req, res) 
+})
 
 
 //验证token

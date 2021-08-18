@@ -8,7 +8,7 @@ const mongoose = require('mongoose')
 const ctrlunitSchema = new mongoose.Schema({
   ctrlunit_number: {type: String, required: true},
   ctrlunit_type: {type: String},
-  ctrlunit_cuadd: {type: Number, default: 0},
+  ctrlunit_cuadd: {type: String, default: 0},
   ctrlunit_css: {type: Number, default: 0},
   ctrlunit_mc: {type: Number, default: 0},
   ctrlunit_serial: {type: Number, default: 0},

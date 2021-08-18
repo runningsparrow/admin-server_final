@@ -6,7 +6,9 @@ const mongoose = require('mongoose')
 
 // 2.字义Schema(描述文档结构)
 const envSchema = new mongoose.Schema({
+  lpar_sysplex: {type: String, required: true},
   envname: {type: String, required: true, default: '国内开发一套'},
+  envalias: {type: String},
 })
 
 // 3. 定义Model(与集合对应, 可以操作集合)

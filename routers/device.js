@@ -13,6 +13,7 @@ const DeviceModel = require('../models/DeviceModel')
  * @consumes application/x-www-form-urlencoded
  * @param {string} device_number.formData.required
  * @param {string} device_volser.formData.required
+ * @param {string} device_cu_nunmber.formData.required
  * @param {string} device_sysplex.formData
  * @param {string} device_type.formData
  * @param {string} device_ser.formData
@@ -66,6 +67,7 @@ exports.deviceadd = function(req, res){
  * @consumes application/x-www-form-urlencoded
  * @param {string} device_number.formData.required
  * @param {string} device_volser.formData.required
+ * @param {string} device_cu_nunmber.formData.required
  * @param {string} device_sysplex.formData
  * @param {string} device_type.formData
  * @param {string} device_ser.formData
@@ -90,8 +92,8 @@ exports.deviceupdate = function(req, res){
       res.send({status: 0, data})
     })
     .catch(error => {
-      console.error('更新lpar异常', error)
-      res.send({status: 1, msg: '更新lpar异常, 请重新尝试'})
+      console.error('更新device异常', error)
+      res.send({status: 1, msg: '更新device异常, 请重新尝试'})
     })
 }
 
@@ -123,8 +125,8 @@ exports.devicedelete = function(req, res){
       
     })
     .catch(error => {
-      console.error('删除lpar异常', error)
-      res.send({status: 1, msg: '删除lpar异常, 请重新尝试'})
+      console.error('删除device异常', error)
+      res.send({status: 1, msg: '删除device异常, 请重新尝试'})
     })
 }
 
