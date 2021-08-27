@@ -508,6 +508,19 @@ router.get('/manage/lpar/list', (req, res) => {
 })
 
 
+// 获取产品分页列表
+router.get('/manage/lpar/list', (req, res) => {
+  const {pageNum, pageSize} = req.query
+  LparModel.find({})
+    .then(lpars => {
+      res.send({status: 0, data: pageFilter(lpars, pageNum, pageSize)})
+    })
+    .catch(error => {
+      console.error('获取lpar列表异常', error)
+      res.send({status: 1, msg: '获取lpar列表异常, 请重新尝试'})
+    })
+})
+
 //添加一个Lpar
 router.post('/manage/lpar/add', (req, res) => {
   // 读取请求参数数据
