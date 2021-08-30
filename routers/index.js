@@ -20,6 +20,7 @@ const EnvModel = require('../models/EnvModel')
 
 
 
+
 //20210724 在路由里面调用刚才写好的方法生成Token   router.js
 const {createToken} = require("../utils/jwt.js");
 
@@ -29,6 +30,7 @@ const plexobj = require('./plex')
 const deviceobj = require('./device')
 const ctrlunit = require('./ctrlunit')
 const disktype = require('./disktype')
+const lpar = require('./lpar')
 
 
 // 得到路由器对象
@@ -508,18 +510,6 @@ router.get('/manage/lpar/list', (req, res) => {
 })
 
 
-// 获取产品分页列表
-router.get('/manage/lpar/list', (req, res) => {
-  const {pageNum, pageSize} = req.query
-  LparModel.find({})
-    .then(lpars => {
-      res.send({status: 0, data: pageFilter(lpars, pageNum, pageSize)})
-    })
-    .catch(error => {
-      console.error('获取lpar列表异常', error)
-      res.send({status: 1, msg: '获取lpar列表异常, 请重新尝试'})
-    })
-})
 
 //添加一个Lpar
 router.post('/manage/lpar/add', (req, res) => {
@@ -593,6 +583,11 @@ router.post('/manage/lpar/delete', (req, res) => {
     })
 })
 
+
+//lpar
+router.post('/manage/lpar/pagelist', (req, res) => {
+  lpar.lparpagelist(req, res) 
+})
 
 //Env
 //添加一个Env
