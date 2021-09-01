@@ -12,8 +12,6 @@ const LparModel = require('../models/LparModel')
  * @returns {object} 200 - An array of lpar info
  * @returns {Error}  default - Unexpected error
  */
-
-
 // 获取产品分页列表
 // router.get('/manage/lpar/pagelist', (req, res) => {
 exports.lparpagelist = function(req, res){
@@ -55,3 +53,41 @@ function pageFilter(arr, pageNum, pageSize) {
       list
     }
   }
+
+// 搜索lpar列表
+/**
+ * 搜索 lpar 页面   
+ * @route POST /manage/lpar/search
+ * @group lpar 逻辑分区 - Operations about lpar
+ * @param {number} pageNum.formData.required
+ * @param {number} pageSize.formData.required
+ * @param {string} searchName.formData
+ * @param {string} lpar_name.formData
+ * @param {string} lpar_sysplex.formData
+ * @consumes application/x-www-form-urlencoded
+ * @returns {object} 200 - An array of lpar info
+ * @returns {Error}  default - Unexpected error
+ */
+// router.get('/manage/lpar/search', (req, res) => {
+exports.lparsearch = function(req, res){
+  // const {pageNum, pageSize, searchName, lpar_name, lpar_sysplex} = req.body
+  const {pageNum, pageSize, lpar_name, lpar_sysplex} = req.body
+  // console.log(req.body)
+  let contition = {}
+  if (lpar_name) {
+    contition = {lpar_name: new RegExp(`^.*${lpar_name}.*$`)}
+  } else if (lpar_sysplex) {
+    contition = {lpar_sysplex: new RegExp(`^.*${lpar_sysplex}.*$`)}
+  }
+  LparModel.find(contition)
+    .then(lpars => {
+      console.log(lpars)
+      res.send({status: 0, data: pageFilter(lpars, pageNum, pageSize)})
+    })
+    .catch(error => {
+      console.error('搜索lpar列表异常', error)
+      res.send({status: 1, msg: '搜索lpar列表异常, 请重新尝试'})
+    })
+}
+  
+

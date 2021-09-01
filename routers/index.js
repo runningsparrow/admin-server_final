@@ -589,6 +589,11 @@ router.post('/manage/lpar/pagelist', (req, res) => {
   lpar.lparpagelist(req, res) 
 })
 
+router.post('/manage/lpar/search', (req, res) => {
+  lpar.lparsearch(req, res) 
+})
+
+
 //Env
 //添加一个Env
 router.post('/manage/env/add', (req, res) => {
