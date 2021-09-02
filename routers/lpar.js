@@ -70,9 +70,9 @@ function pageFilter(arr, pageNum, pageSize) {
  */
 // router.get('/manage/lpar/search', (req, res) => {
 exports.lparsearch = function(req, res){
-  // const {pageNum, pageSize, searchName, lpar_name, lpar_sysplex} = req.body
-  const {pageNum, pageSize, lpar_name, lpar_sysplex} = req.body
-  // console.log(req.body)
+  const {pageNum, pageSize, searchName, lpar_name, lpar_sysplex} = req.body
+  
+  console.log(req.body)
   let contition = {}
   if (lpar_name) {
     contition = {lpar_name: new RegExp(`^.*${lpar_name}.*$`)}
@@ -81,7 +81,7 @@ exports.lparsearch = function(req, res){
   }
   LparModel.find(contition)
     .then(lpars => {
-      console.log(lpars)
+      
       res.send({status: 0, data: pageFilter(lpars, pageNum, pageSize)})
     })
     .catch(error => {
