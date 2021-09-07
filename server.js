@@ -116,7 +116,20 @@ app.use('/', indexRouter)  //
 })*/
 
 // 通过mongoose连接数据库
-mongoose.connect('mongodb://localhost/server_db2', {useNewUrlParser: true})
+// mongoose.connect('mongodb://localhost/server_db2', {useNewUrlParser: true})
+//   .then(() => {
+//     console.log('连接数据库成功!!!')
+//     // 只有当连接上数据库后才去启动服务器
+//     app.listen('5000', () => {
+//       console.log('服务器启动成功, 请访问: http://localhost:5000')
+//     })
+//   })
+//   .catch(error => {
+//     console.error('连接数据库失败', error)
+//   })
+
+//138.128.215.73
+mongoose.connect('mongodb://138.128.215.73/server_db2', {useNewUrlParser: true})
   .then(() => {
     console.log('连接数据库成功!!!')
     // 只有当连接上数据库后才去启动服务器
@@ -127,4 +140,3 @@ mongoose.connect('mongodb://localhost/server_db2', {useNewUrlParser: true})
   .catch(error => {
     console.error('连接数据库失败', error)
   })
-
