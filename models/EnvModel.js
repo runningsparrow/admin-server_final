@@ -14,5 +14,6 @@ const envSchema = new mongoose.Schema({
 // 3. 定义Model(与集合对应, 可以操作集合)
 const EnvModel = mongoose.model('env', envSchema)
 
+
 // 4. 向外暴露Model
 module.exports = EnvModel
