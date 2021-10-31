@@ -129,7 +129,8 @@ app.use('/', indexRouter)  //
 //   })
 
 //138.128.215.73
-mongoose.connect('mongodb://138.128.215.73/server_db2', {useNewUrlParser: true})
+//185.239.71.36
+mongoose.connect('mongodb://185.239.71.36/server_db2', {useNewUrlParser: true})
   .then(() => {
     console.log('连接数据库成功!!!')
     // 只有当连接上数据库后才去启动服务器
